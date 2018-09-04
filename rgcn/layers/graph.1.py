@@ -57,8 +57,6 @@ class GraphConvolution(Layer):
         print ("computing output shapes for %s" % str(input_shape))
         #TODO check whether the input_chape includes the batch size
         assert len(input_shape) == 3
-        # case if it would eno=umerate all inputs or sth...
-        assert len (input_shape) == 1
         # input_shape = input_shapes[0] 
         batch_size = input_shape[0]
         number_of_nodes_in_graph = input_shape[1]

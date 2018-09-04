@@ -94,7 +94,7 @@ class GraphConvolution(Layer):
         #input_shape = (None - batch size, nodes, input_dim )
         #output shape=(None - batch size, nodes, output_dim)
         
-        result = K.slice(zeros_like(inputs), (0, 0, 0), (-1, -1, output_dim) )
+        result = K.slice(K.zeros_like(inputs), (0, 0, 0), (-1, -1, output_dim) )
         return result
         # features = inputs[0]
         # A = inputs[1:]  # list of basis functions

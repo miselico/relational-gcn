@@ -131,7 +131,7 @@ class GraphConvolution(Layer):
 
 if __name__ == "__main__":
     from keras.models import Sequential
-    from keras.layers import Embedding
+    from keras.layers import Reshape, Dense
 
 
     number_of_nodes_in_graph = 5
@@ -143,7 +143,9 @@ if __name__ == "__main__":
 
     
     model = Sequential([
-        gc
+        gc,
+        Reshape((55,), input_shape=(5,11)),
+        Dense(29)
     ])
 
     

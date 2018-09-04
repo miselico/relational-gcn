@@ -34,7 +34,7 @@ class GraphConvolution(Layer):
 
         """
         
-        self.init = initializations.get(init)
+        self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
         self.adjecancies = adjecancies
 

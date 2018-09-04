@@ -94,7 +94,11 @@ class GraphConvolution(Layer):
         #input_shape = (None - batch size, nodes, input_dim )
         #output shape=(None - batch size, nodes, output_dim)
         
-        result = K.slice(K.zeros_like(inputs), (0, 0, 0), (-1, -1, self.output_dim) )
+        # does not work, slice not implemented Theano backend result = K.slice(K.zeros_like(inputs), (0, 0, 0), (-1, -1, self.output_dim) )
+
+        randomizer = K.random_uniform_variable(shape=(self.input_dim, self.output_dim), low=0, high=1)
+        result = K.dot(inputs, randomizer)
+
         return result
         # features = inputs[0]
         # A = inputs[1:]  # list of basis functions

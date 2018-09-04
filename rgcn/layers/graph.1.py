@@ -89,7 +89,9 @@ class GraphConvolution(Layer):
 
     def call(self, inputs, mask=None):
         print("Call called with input ", inputs)
-        result = K.random_uniform_variable(shape=(inputs.shape[0], inputs.shape[1], self.output_dim), low=100, high=110)
+        inputs = K.print_tensor(inputs)
+        shape=(inputs.shape  [0], inputs.shape[1], self.output_dim)
+        result = K.random_uniform_variable(inputs.shape, low=100, high=110)
         return result
         # features = inputs[0]
         # A = inputs[1:]  # list of basis functions

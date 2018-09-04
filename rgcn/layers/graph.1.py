@@ -95,26 +95,15 @@ class GraphConvolution(Layer):
 
         # convolve
         supports = list()
-        for i in range(self.support):
-            if not self.featureless:
-                supports.append(K.dot(A[i], features))
-            else:
-                supports.append(A[i])
+        for i in range(len(self.adjecancies)):
+            supports.append(K.dot(A[i], features))
         supports = K.concatenate(supports, axis=1)
 
-        if self.num_bases > 0:
-            self.W = K.reshape(self.W,
-                               (self.num_bases, self.input_dim, self.output_dim))
-            self.W = K.permute_dimensions(self.W, (1, 0, 2))
-            V = K.dot(self.W_comp, self.W)
-            V = K.reshape(V, (self.support*self.input_dim, self.output_dim))
-            output = K.dot(supports, V)
-        else:
-            output = K.dot(supports, self.W)
+        output = K.dot(supports, self.W)
 
         if self.bias:
             output += self.b
-        return self.output
+        return output
 
     def get_config(self):
         config = {'output_dim': self.output_dim,

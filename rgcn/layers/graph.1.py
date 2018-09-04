@@ -54,6 +54,7 @@ class GraphConvolution(Layer):
         super(GraphConvolution, self).__init__(**kwargs)
 
     def compute_output_shape(self, input_shape):
+        print ("computing output shapes for %s" % str(input_shape))
         #TODO check whether the input_chape includes the batch size
         assert len(input_shape) == 3
         # case if it would eno=umerate all inputs or sth...
@@ -66,7 +67,7 @@ class GraphConvolution(Layer):
 
     def build(self, input_shape):
         #input shape = (None - batch size, nodes, input_dim )
-        print(input_shape)
+        print("building for ", input_shape)
         
         assert len(input_shape) == 3
         self.num_nodes = input_shape[1]
@@ -145,7 +146,17 @@ if __name__ == "__main__":
         gc
     ])
 
+    model.summary()
+    
     model.compile(optimizer='adagrad',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
+    #feed random input features
+    import numpy as np
+    data = np.random.random((1000, 100))
+    labels = np.random.randint(2, size=(1000, 1))
+
+    # Train the model, iterating on the data in batches of 32 samples
+    model.fit(data, labels, epochs=10, batch_size=32)
+    

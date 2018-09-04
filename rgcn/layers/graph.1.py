@@ -88,20 +88,22 @@ class GraphConvolution(Layer):
             del self.initial_weights
 
     def call(self, inputs, mask=None):
-        features = inputs[0]
-        A = inputs[1:]  # list of basis functions
+        result = K.random_uniform_variable(shape=(inputs.shape[0], input.shape[1], self.output_dim), low=100, high=110)
+        return result
+        # features = inputs[0]
+        # A = inputs[1:]  # list of basis functions
 
-        # convolve
-        supports = list()
-        for i in range(len(self.adjecancies)):
-            supports.append(K.dot(A[i], features))
-        supports = K.concatenate(supports, axis=1)
+        # # convolve
+        # supports = list()
+        # for i in range(len(self.adjecancies)):
+        #     supports.append(K.dot(A[i], features))
+        # supports = K.concatenate(supports, axis=1)
 
-        output = K.dot(supports, self.W)
+        # output = K.dot(supports, self.W)
 
-        if self.bias:
-            output += self.b
-        return output
+        # if self.bias:
+        #     output += self.b
+        # return output
 
     def get_config(self):
         config = {'output_dim': self.output_dim,

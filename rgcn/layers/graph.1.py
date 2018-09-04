@@ -65,27 +65,17 @@ class GraphConvolution(Layer):
         return output_shape  # (batch_size, nodes, output_dim)
 
     def build(self, input_shape):
+        #input shape = (None - batch size, nodes, input_dim )
         print(input_shape)
-        features_shape = input_shape[0]
-
-        assert len(features_shape) == 2
-        self.input_dim = features_shape[1]
-        if self.num_bases > 0:
-            self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
+        
+        assert len(input_shape) == 3
+        self.num_nodes = input_shape[1]
+        self.input_dim = input_shape[2]
+        # there was code for bases supprt here. Removed it till functionality is clear
+        self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
                                                     initializer=self.init,
                                                     name='{}_W'.format(self.name),
-                                                    regularizer=self.W_regularizer) for _ in range(self.num_bases)],
-                                   axis=0)
-
-            self.W_comp = self.add_weight((self.support, self.num_bases),
-                                          initializer=self.init,
-                                          name='{}_W_comp'.format(self.name),
-                                          regularizer=self.W_regularizer)
-        else:
-            self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
-                                                    initializer=self.init,
-                                                    name='{}_W'.format(self.name),
-                                                    regularizer=self.W_regularizer) for _ in range(self.support)],
+                                                    regularizer=self.W_regularizer) for _ in self.adjecancies],
                                    axis=0)
 
         if self.bias:
@@ -144,13 +134,13 @@ if __name__ == "__main__":
     from keras.layers import Embedding
 
     
-    emb = Embedding(input_dim=3, output_dim=5, input_length=1)
+#    emb = Embedding(input_dim=3, output_dim=5, input_length=1)
     output_dim = 7
     adjecancies = [(1,2), (2,3), (3,4)]
     gc = GraphConvolution(output_dim, adjecancies)
 
     
     model = Sequential([
-        emb,
+#        emb,
         gc
     ])

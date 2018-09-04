@@ -71,21 +71,23 @@ class GraphConvolution(Layer):
         self.num_nodes = input_shape[1]
         self.input_dim = input_shape[2]
         # there was code for bases supprt here. Removed it till functionality is clear
-        self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
-                                                    initializer=self.init,
-                                                    name='{}_W'.format(self.name),
-                                                    regularizer=self.W_regularizer) for _ in self.adjecancies],
-                                   axis=0)
+       
+        #next is orignal code for weights. These will be changed.
+        # self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
+        #                                             initializer=self.init,
+        #                                             name='{}_W'.format(self.name),
+        #                                             regularizer=self.W_regularizer) for _ in self.adjecancies],
+        #                            axis=0)
 
-        if self.bias:
-            self.b = self.add_weight((self.output_dim,),
-                                     initializer='zero',
-                                     name='{}_b'.format(self.name),
-                                     regularizer=self.b_regularizer)
+        # if self.bias:
+        #     self.b = self.add_weight((self.output_dim,),
+        #                              initializer='zero',
+        #                              name='{}_b'.format(self.name),
+        #                              regularizer=self.b_regularizer)
 
-        if self.initial_weights is not None:
-            self.set_weights(self.initial_weights)
-            del self.initial_weights
+        # if self.initial_weights is not None:
+        #     self.set_weights(self.initial_weights)
+        #     del self.initial_weights
 
     def call(self, inputs, mask=None):
         print("Call called with input ", inputs)

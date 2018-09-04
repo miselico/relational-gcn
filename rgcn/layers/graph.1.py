@@ -136,7 +136,7 @@ if __name__ == "__main__":
     
 #    emb = Embedding(input_dim=3, output_dim=5, input_length=1)
     output_dim = 7
-    adjecancies = [(1,2), (2,3), (3,4)]
+    adjecancies = [[(1,2)], [(2,3), (3,4)]]
     gc = GraphConvolution(output_dim, adjecancies)
 
     
@@ -144,3 +144,8 @@ if __name__ == "__main__":
 #        emb,
         gc
     ])
+
+    model.compile(optimizer='adagrad',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+

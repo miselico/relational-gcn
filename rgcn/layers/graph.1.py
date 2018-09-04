@@ -21,19 +21,18 @@ class GraphConvolution(Layer):
                  init='glorot_uniform', 
                  weights=None, W_regularizer=None, 
                  b_regularizer=None, bias=False,  **kwargs):
-    """
-    The original implementation had a num_bases=-1 argument. As I am not sure what it is used for, I left it out.
+        """
+        The original implementation had a num_bases=-1 argument. As I am not sure what it is used for, I left it out.
 
-    Args:
-        output_dim: The dimension to be used for the output vectors
-        adjecancies: The adjecencies in the graph. A list of two dimensional arrays.
-        Each list represents one relation. Iterating over the first dimension yields pairs (A,B) meaning there  is an arrow from A to B in the graph
+        Args:
+            output_dim: The dimension to be used for the output vectors
+            adjecancies: The adjecencies in the graph. A list of two dimensional arrays.
+            Each list represents one relation. Iterating over the first dimension yields pairs (A,B) meaning there  is an arrow from A to B in the graph
 
-    Returns:
-        The return value. True for success, False otherwise.
+        Returns:
+            The return value. True for success, False otherwise.
 
-    """
-        
+        """
         
         self.init = initializations.get(init)
         self.output_dim = output_dim  # number of features per node
@@ -62,11 +61,11 @@ class GraphConvolution(Layer):
         # input_shape = input_shapes[0] 
         batch_size = input_shape[0]
         number_of_nodes_in_graph = input_shape[1]
-        output_shape = (batch_size, number_of_node_in_graph, self.output_dim)
+        output_shape = (batch_size, number_of_nodes_in_graph, self.output_dim)
         return output_shape  # (batch_size, nodes, output_dim)
 
     def build(self, input_shape):
-        features_shape = input_shapes[0]
+        features_shape = input_shape[0]
 
         assert len(features_shape) == 2
         self.input_dim = features_shape[1]

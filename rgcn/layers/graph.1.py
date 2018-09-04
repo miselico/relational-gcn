@@ -141,12 +141,12 @@ if __name__ == "__main__":
 
     #feed random input features
     import numpy as np
-    samples = 10
+    samples = 13
     X = np.random.random((samples, number_of_nodes_in_graph, input_feature_dim))
     Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
 
     # Train the model, iterating on the data in batches of 32 samples
-    model.fit(Y, Y, epochs=10, batch_size=32)
+    model.fit(Y, Y, epochs=1, batch_size=5)
     model.summary()
     
 

@@ -140,10 +140,10 @@ class GraphConvolution(Layer):
 
 if __name__ == "__main__":
     from keras.models import Sequential
-    from keras.layers import Dense, Activation
+    from keras.layers import Embedding
 
     
-    emb = keras.layers.Embedding(input_dim=3, output_dim=5, input_length=1)
+    emb = Embedding(input_dim=3, output_dim=5, input_length=1)
     output_dim = 7
     adjecancies = [(1,2), (2,3), (3,4)]
     gc = GraphConvolution(output_dim, adjecancies)

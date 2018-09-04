@@ -144,14 +144,16 @@ if __name__ == "__main__":
     
     model = Sequential([
         gc,
-        Reshape((55,1)),
-        Dense(20)
+       # Reshape((55,1)),
+       # Dense(20)
     ])
 
     
     model.compile(optimizer='adagrad',
               loss='mean_squared_error',
               metrics=['accuracy'])
+
+    model.summary()
 
     #feed random input features
     import numpy as np
@@ -161,7 +163,6 @@ if __name__ == "__main__":
 
     # Train the model, iterating on the data in batches of 32 samples
     model.fit(Y, Y, epochs=1, batch_size=5)
-    model.summary()
     
 
     

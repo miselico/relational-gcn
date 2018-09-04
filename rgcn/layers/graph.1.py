@@ -163,7 +163,7 @@ if __name__ == "__main__":
     Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(Y, Y, epochs=1, batch_size=3)
+    model.fit(X, Y, epochs=1, batch_size=3)
     
 
     model.summary()

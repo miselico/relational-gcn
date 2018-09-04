@@ -153,7 +153,6 @@ if __name__ == "__main__":
               loss='mean_squared_error',
               metrics=['accuracy'])
 
-    model.summary()
 
     #feed random input features
     import numpy as np
@@ -162,9 +161,10 @@ if __name__ == "__main__":
     Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
 
     # Train the model, iterating on the data in batches of 32 samples
-    model.fit(Y, Y, epochs=1, batch_size=5)
+    model.fit(Y, Y, epochs=1, batch_size=3)
     
 
+    model.summary()
     
 
 

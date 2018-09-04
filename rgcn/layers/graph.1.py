@@ -88,6 +88,7 @@ class GraphConvolution(Layer):
             del self.initial_weights
 
     def call(self, inputs, mask=None):
+        print("Call called with input ", input)
         result = K.random_uniform_variable(shape=(inputs.shape[0], input.shape[1], self.output_dim), low=100, high=110)
         return result
         # features = inputs[0]

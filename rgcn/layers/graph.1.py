@@ -146,11 +146,11 @@ if __name__ == "__main__":
         gc
     ])
 
-    model.summary()
     
     model.compile(optimizer='adagrad',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
+    model.summary()
 
     #feed random input features
     import numpy as np
@@ -159,4 +159,5 @@ if __name__ == "__main__":
 
     # Train the model, iterating on the data in batches of 32 samples
     model.fit(data, labels, epochs=10, batch_size=32)
+    
     

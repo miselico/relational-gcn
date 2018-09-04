@@ -65,7 +65,7 @@ class GraphConvolution(Layer):
         return output_shape  # (batch_size, nodes, output_dim)
 
     def build(self, input_shape):
-        print input_shape
+        print(input_shape)
         features_shape = input_shape[0]
 
         assert len(features_shape) == 2

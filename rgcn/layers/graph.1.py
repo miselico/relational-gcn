@@ -9,7 +9,7 @@ This implementation is made to work with Keras 2.0
 
 from __future__ import print_function
 
-from keras import activations, initializations
+from keras import activations, initializers
 from keras import regularizers
 from keras.engine import Layer
 

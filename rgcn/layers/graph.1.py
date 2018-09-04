@@ -134,15 +134,16 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Embedding
 
-    
-#    emb = Embedding(input_dim=3, output_dim=5, input_length=1)
-    output_dim = 7
-    adjecancies = [[(1,2)], [(2,3), (3,4)]]
-    gc = GraphConvolution(output_dim, adjecancies)
+
+    number_of_nodes_in_graph = 5
+    adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
+    input_feature_dim = 11
+    output_feature_dim = 7
+
+    gc = GraphConvolution(output_dim = output_feature_dim, adjecancies = adjecancies)
 
     
     model = Sequential([
-#        emb,
         gc
     ])
 
@@ -153,11 +154,15 @@ if __name__ == "__main__":
 
     #feed random input features
     import numpy as np
-    data = np.random.random((1000, 100))
-    labels = np.random.randint(2, size=(1000, 1))
+    samples = 10
+    X = np.random.random((samples, number_of_nodes_in_graph, input_feature_dim))
+    Y = np.random.randint(2, size=(number_of_nodes_in_graph, output_feature_dim))
 
     # Train the model, iterating on the data in batches of 32 samples
-    model.fit(data, labels, epochs=10, batch_size=32)
+    model.fit(Y, Y, epochs=10, batch_size=32)
     model.summary()
     
+
     
+
+

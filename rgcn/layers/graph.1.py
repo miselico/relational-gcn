@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     
     model.compile(optimizer='adagrad',
-              loss='categorical_crossentropy',
+              loss='mean_squared_error',
               metrics=['accuracy'])
 
     #feed random input features

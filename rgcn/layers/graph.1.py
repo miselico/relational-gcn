@@ -145,7 +145,7 @@ if __name__ == "__main__":
     model = Sequential([
         gc,
         #Reshape((55,)),
-        Dense(29)
+        Dense((5,29))
     ])
 
     

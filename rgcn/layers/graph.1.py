@@ -114,7 +114,9 @@ class GraphConvolution(Layer):
         #TODO apply weights for self loops
         #TODO apply bias
 
-        out_summed = [K.sum(nodePart) for nodePart in out_parts]
+
+
+        out_summed = [sum(nodePart) for nodePart in out_parts]
 
         out = K.concatenate(out_summed)
 

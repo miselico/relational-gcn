@@ -120,9 +120,11 @@ class GraphConvolution(Layer):
 
         out_summed = []
         for nodePart in out_parts:
+            # TODO fix what happens when nothing is there.
             theSum = nodePart[0]
-            for nodePartPart in nodePart[1:]:
-                theSum = theSum + nodePartPart
+            # TODO re-enable
+            #for nodePartPart in nodePart[1:]:
+            #    theSum = theSum + nodePartPart
             out_summed.append(theSum)
 
         out = K.concatenate(out_summed)

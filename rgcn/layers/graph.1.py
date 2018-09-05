@@ -72,22 +72,21 @@ class GraphConvolution(Layer):
         self.input_dim = input_shape[2]
         # there was code for bases supprt here. Removed it till functionality is clear
        
-        #next is orignal code for weights. These will be changed.
-        # self.W = K.concatenate([self.add_weight((self.input_dim, self.output_dim),
-        #                                             initializer=self.init,
-        #                                             name='{}_W'.format(self.name),
-        #                                             regularizer=self.W_regularizer) for _ in self.adjecancies],
-        #                            axis=0)
+        #for each relation type there is an own weight matrix
+        self.W = [self.add_weight((self.input_dim, self.output_dim),
+                                                     initializer=self.init,
+                                                     name='{}_W_{}'.format(self.name, i),
+                                                     regularizer=self.W_regularizer) for (i, _) in enumerate(self.adjecancies)]
 
-        # if self.bias:
-        #     self.b = self.add_weight((self.output_dim,),
-        #                              initializer='zero',
-        #                              name='{}_b'.format(self.name),
-        #                              regularizer=self.b_regularizer)
+        if self.bias:
+             self.b = self.add_weight((self.output_dim,),
+                                      initializer='zero',
+                                      name='{}_b'.format(self.name),
+                                      regularizer=self.b_regularizer)
 
-        # if self.initial_weights is not None:
-        #     self.set_weights(self.initial_weights)
-        #     del self.initial_weights
+        if self.initial_weights is not None:
+             self.set_weights(self.initial_weights)
+             del self.initial_weights
 
     def call(self, inputs, mask=None):
         print("Call called with input ", inputs)
@@ -96,12 +95,33 @@ class GraphConvolution(Layer):
         #input_shape = (None - batch size, nodes, input_dim )
         #output shape=(None - batch size, nodes, output_dim)
         
+        # Placeholders to get dimensions correct
         # does not work, slice not implemented Theano backend result = K.slice(K.zeros_like(inputs), (0, 0, 0), (-1, -1, self.output_dim) )
+        # randomizer = K.random_uniform_variable(shape=(self.input_dim, self.output_dim), low=0, high=1)
+        # result = K.dot(inputs, randomizer)
+        # return result
+        
 
-        randomizer = K.random_uniform_variable(shape=(self.input_dim, self.output_dim), low=0, high=1)
-        result = K.dot(inputs, randomizer)
+        #list with an item for each node. Each item is a list of tensors which need to be summed to get the output for that node. The final output is the concatenation of these sums.
+        out_parts = [[]] * self.num_nodes
 
-        return result
+        #apply weights on links
+        for (relationIndex, relAdj) in enumerate(self.adjecancies):
+            relationWeight = self.W[relationIndex]
+            for (source, dest) in relAdj:
+                part = K.dot(inputs[:,source], relationWeight)
+                out_parts[dest].append(part)
+        #TODO apply weights for self loops
+        #TODO apply bias
+
+        out_summed = [K.sum(nodePart) for nodePart in out_parts]
+
+        out = K.concatenate(out_summed)
+
+        return out
+
+
+    # Part of old code:    
         # features = inputs[0]
         # A = inputs[1:]  # list of basis functions
 

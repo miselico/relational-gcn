@@ -128,7 +128,13 @@ class GraphConvolution(Layer):
         # TODO apply weights for self loops
         # TODO apply bias
 
-        out_summed = [sum(nodePart) for nodePart in out_parts]
+
+        def sumorsingle(aList):
+            if len (aList) > 1:
+                return sum aList
+            else
+                return aList[0]
+        out_summed = [sumorsingle(nodePart) for nodePart in out_parts]
 
         # out_summed = []
         # for nodePart in out_parts:

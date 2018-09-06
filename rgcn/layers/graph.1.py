@@ -182,7 +182,7 @@ if __name__ == "__main__":
     
     model = Sequential([
         gc,
-        Reshape((number_of_nodes_in_graph*output_feature_dim, ))
+#        Reshape((number_of_nodes_in_graph*output_feature_dim, ))
        # Reshape((55,1)),
        # Dense(20)
     ])
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     import numpy as np
     samples = 13
     X = np.random.random((samples, number_of_nodes_in_graph, input_feature_dim))
-    Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph * output_feature_dim))
+    Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
     model.fit(X, Y, epochs=1, batch_size=3)

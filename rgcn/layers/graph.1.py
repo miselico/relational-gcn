@@ -123,8 +123,11 @@ class GraphConvolution(Layer):
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
             relationWeight = self.W[relationIndex]
             for (source, dest) in relAdj:
+                print ("src, dst" + str((source, dest)))
                 part = K.dot(inputs[:, source], relationWeight)
                 out_parts[dest].append(part)
+        
+        print (out_parts)
         # TODO apply weights for self loops
         # TODO apply bias
 

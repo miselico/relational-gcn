@@ -17,6 +17,8 @@ from keras.layers import Flatten, Reshape
 
 import keras.backend as K
 
+from keras.utils import plot_model
+
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
                  init='glorot_uniform',
@@ -177,16 +179,16 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 50
+    number_of_nodes_in_graph = 5
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     #adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
     #adjecancies = [[(1,2), (2, 3)]]
     adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
 
-    input_feature_dim = 50
-    internal_feature_dim = 20
-    final_output_feature_dim = 1
+    input_feature_dim = 10
+    internal_feature_dim = 10
+    final_output_feature_dim = 3
 
     gc = GraphConvolution(output_dim=internal_feature_dim,
                           adjecancies=adjecancies)
@@ -209,13 +211,14 @@ if __name__ == "__main__":
 
     # feed random input features
     import numpy as np
-    samples = 100
+    samples = 10
     X = np.random.random(
         (samples, number_of_nodes_in_graph, input_feature_dim))
     Y = np.random.randint(
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=500, batch_size=10)
+    model.fit(X, Y, epochs=500, batch_size=3)
+    plot_model(model, to_file='model.png')
 
     model.summary()

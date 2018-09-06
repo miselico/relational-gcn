@@ -213,6 +213,6 @@ if __name__ == "__main__":
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=10, batch_size=3)
+    model.fit(X, Y, epochs=500, batch_size=3)
 
     model.summary()

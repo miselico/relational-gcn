@@ -11,9 +11,9 @@ from __future__ import print_function
 
 from keras import activations, initializers
 from keras import regularizers
-from keras.engine import Layer, Reshape
+from keras.engine import Layer
 
-from keras.layers import Flatten
+from keras.layers import Flatten, Reshape
 
 import keras.backend as K
 

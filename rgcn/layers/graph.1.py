@@ -181,9 +181,9 @@ if __name__ == "__main__":
     #adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
     #adjecancies = [[(1,2), (2, 3)]]
 
-    input_feature_dim = 11
-    internal_feature_dim = 20
-    final_output_feature_dim = 7
+    input_feature_dim = 5
+    internal_feature_dim = 30
+    final_output_feature_dim = 5
 
     gc = GraphConvolution(output_dim=internal_feature_dim,
                           adjecancies=adjecancies)

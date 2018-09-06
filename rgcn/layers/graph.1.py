@@ -140,12 +140,11 @@ class GraphConvolution(Layer):
             theSum = nodePart[0]
             for nodePartPart in nodePart[1:]:
                 theSum += nodePartPart
-            theSum = K.print_tensor(theSum, message='thesum')
+            #theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
 
         out = K.stack(out_summed, axis=1)
-        print (out)
-        K.print_tensor(out, message='OUTPUT')
+        out = K.print_tensor(out, message='OUTPUT')
         return out
 
 

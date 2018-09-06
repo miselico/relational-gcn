@@ -127,7 +127,7 @@ class GraphConvolution(Layer):
             #    theSum = theSum + nodePartPart
             out_summed.append(theSum)
 
-        out = K.concatenate(out_summed)
+        out = K.stack(out_summed)
         K.print_tensor(out)
         return out
 

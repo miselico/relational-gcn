@@ -190,6 +190,8 @@ if __name__ == "__main__":
               metrics=['accuracy'])
 
 
+    print (model.output_shape)
+
     #feed random input features
     import numpy as np
     samples = 13

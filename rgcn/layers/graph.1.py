@@ -16,7 +16,7 @@ from keras.engine import Layer
 from keras.layers import Flatten, Reshape
 
 import keras.backend as K
-
+import keras.backend.tf as tf
 
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
@@ -132,9 +132,9 @@ class GraphConvolution(Layer):
         out_summed = []
         for nodePart in out_parts:
             # TODO fix what happens when nothing is there.
-            theSum = K.variable(K.zeros_like (nodePart[0]))
+            theSum = nodePart[0]
             for nodePartPart in nodePart:
-                K.update_add(theSum, nodePartPart)
+                theSum = theSum + nodePartPart
             #theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
 

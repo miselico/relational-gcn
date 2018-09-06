@@ -92,6 +92,10 @@ class GraphConvolution(Layer):
                                   initializer=self.init,
                                   name='{}_W_{}'.format(self.name, i),
                                   regularizer=self.W_regularizer) for (i, _) in enumerate(self.adjecancies)]
+        self.W_self = self.add_weight((self.input_dim, self.output_dim),
+                                  initializer=self.init,
+                                  name=self.name + '_selfweight',
+                                  regularizer=self.W_regularizer)
 
         if self.bias:
             self.b = self.add_weight((self.output_dim,),
@@ -121,22 +125,22 @@ class GraphConvolution(Layer):
         out_parts = [list() for _ in range(self.num_nodes)]
         # apply weights on links
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
-            print ("relation" + str(relationIndex))
             relationWeight = self.W[relationIndex]
             for (source, dest) in relAdj:
-                print ("src, dst" + str((source, dest)))
                 part = K.dot(inputs[:, source], relationWeight)
-                destinationList = out_parts[dest]
-                destinationList.append(part)
-                print ("OP " + str(out_parts))
+                out_parts[dest].append(part)
         
-        print (out_parts)
-        # TODO apply weights for self loops
+        # apply weights for self loops
+
+        for i in range(self.num_nodes):
+            part = K.dot(inputs[:, i], self.W_self)
+            out_parts[i].append(part)
+
+
         # TODO apply bias
 
 
         def sumorsingle(aList):
-            print ("A list of length %d" % len(aList))
             if len (aList) > 1:
                 return sum(aList)
             else:
@@ -195,7 +199,7 @@ if __name__ == "__main__":
     number_of_nodes_in_graph = 3
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
-    adjecancies = [[(1,2), (0, 0), (2,1)]]
+    adjecancies = [[(1,2), (0, 0) ]]
     #adjecancies = [[(1,2), (2, 3)]]
     #adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
 

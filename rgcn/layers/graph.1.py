@@ -20,8 +20,8 @@ import keras.backend as K
 
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
-                 init='glorot_uniform', 
-                 weights=None, W_regularizer=None, 
+                 init='glorot_uniform',
+                 weights=None, W_regularizer=None,
                  b_regularizer=None, bias=False, **kwargs):
         """
         The original implementation had a num_bases=-1 argument. As I am not sure what it is used for, I left it out.
@@ -35,7 +35,7 @@ class GraphConvolution(Layer):
             The return value. True for success, False otherwise.
 
         """
-        
+
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
         allIndices = set()
@@ -45,7 +45,7 @@ class GraphConvolution(Layer):
                 allIndices.add(dest)
         if min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
-        self.maxIndexInAdjecencies =  max (allIndices)
+        self.maxIndexInAdjecencies = max(allIndices)
         self.adjecancies = adjecancies
 
         self.W_regularizer = regularizers.get(W_regularizer)
@@ -65,18 +65,18 @@ class GraphConvolution(Layer):
 
     def compute_output_shape(self, input_shape):
         print ("computing output shapes for %s" % str(input_shape))
-        #TODO check whether the input_chape includes the batch size
+        # TODO check whether the input_chape includes the batch size
         assert len(input_shape) == 3
-        # input_shape = input_shapes[0] 
+        # input_shape = input_shapes[0]
         batch_size = input_shape[0]
         number_of_nodes_in_graph = input_shape[1]
         output_shape = (batch_size, number_of_nodes_in_graph, self.output_dim)
         return output_shape  # (batch_size, nodes, output_dim)
 
     def build(self, input_shape):
-        #input shape = (None - batch size, nodes, input_dim )
+        # input shape = (None - batch size, nodes, input_dim )
         print("building for ", input_shape)
-        
+
         assert len(input_shape) == 3
         self.num_nodes = input_shape[1]
 
@@ -84,53 +84,48 @@ class GraphConvolution(Layer):
 
         self.input_dim = input_shape[2]
 
-
-
         # there was code for bases supprt here. Removed it till functionality is clear
-       
-        #for each relation type there is an own weight matrix
+
+        # for each relation type there is an own weight matrix
         self.W = [self.add_weight((self.input_dim, self.output_dim),
-                                                     initializer=self.init,
-                                                     name='{}_W_{}'.format(self.name, i),
-                                                     regularizer=self.W_regularizer) for (i, _) in enumerate(self.adjecancies)]
+                                  initializer=self.init,
+                                  name='{}_W_{}'.format(self.name, i),
+                                  regularizer=self.W_regularizer) for (i, _) in enumerate(self.adjecancies)]
 
         if self.bias:
-             self.b = self.add_weight((self.output_dim,),
-                                      initializer='zero',
-                                      name='{}_b'.format(self.name),
-                                      regularizer=self.b_regularizer)
+            self.b = self.add_weight((self.output_dim,),
+                                     initializer='zero',
+                                     name='{}_b'.format(self.name),
+                                     regularizer=self.b_regularizer)
 
         if self.initial_weights is not None:
-             self.set_weights(self.initial_weights)
-             del self.initial_weights
+            self.set_weights(self.initial_weights)
+            del self.initial_weights
 
     def call(self, inputs, mask=None):
         print("Call called with input ", inputs)
         inputs = K.print_tensor(inputs)
-        
-        #input_shape = (None - batch size, nodes, input_dim )
-        #output shape=(None - batch size, nodes, output_dim)
-        
+
+        # input_shape = (None - batch size, nodes, input_dim )
+        # output shape=(None - batch size, nodes, output_dim)
+
         # Placeholders to get dimensions correct
         # does not work, slice not implemented Theano backend result = K.slice(K.zeros_like(inputs), (0, 0, 0), (-1, -1, self.output_dim) )
         # randomizer = K.random_uniform_variable(shape=(self.input_dim, self.output_dim), low=0, high=1)
         # result = K.dot(inputs, randomizer)
         # return result
-        
 
-        #list with an item for each node. Each item is a list of tensors which need to be summed to get the output for that node. The final output is the concatenation of these sums.
+        # list with an item for each node. Each item is a list of tensors which need to be summed to get the output for that node. The final output is the concatenation of these sums.
         out_parts = [[]] * self.num_nodes
 
-        #apply weights on links
+        # apply weights on links
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
             relationWeight = self.W[relationIndex]
             for (source, dest) in relAdj:
-                part = K.dot(inputs[:,source], relationWeight)
+                part = K.dot(inputs[:, source], relationWeight)
                 out_parts[dest].append(part)
-        #TODO apply weights for self loops
-        #TODO apply bias
-
-
+        # TODO apply weights for self loops
+        # TODO apply bias
 
         #out_summed = [sum(nodePart) for nodePart in out_parts]
 
@@ -147,8 +142,7 @@ class GraphConvolution(Layer):
         out = K.print_tensor(out, message='OUTPUT')
         return out
 
-
-    # Part of old code:    
+    # Part of old code:
         # features = inputs[0]
         # A = inputs[1:]  # list of basis functions
 
@@ -177,50 +171,48 @@ class GraphConvolution(Layer):
         return dict(list(base_config.items()) + list(config.items()))
 
 
-
 if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-
     number_of_nodes_in_graph = 5
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
-    adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)], [(2,3), (3,4)]]
+    adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]]
     #adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
     #adjecancies = [[(1,2), (2, 3)]]
 
     input_feature_dim = 11
-    output_feature_dim = 7
+    internal_feature_dim = 20
+    final_output_feature_dim = 7
 
-    gc = GraphConvolution(output_dim = output_feature_dim, adjecancies = adjecancies)
+    gc = GraphConvolution(output_dim=internal_feature_dim,
+                          adjecancies=adjecancies)
 
+    gcrepeat = GraphConvolution(
+        output_dim=internal_feature_dim, adjecancies=adjecancies)
 
-    gcrepeat = GraphConvolution(output_dim = output_feature_dim, adjecancies = adjecancies)
-    
+    gcfinal = GraphConvolution(output_dim=final_output_feature_dim)
     model = Sequential([
         gc,
         gcrepeat,
         gcrepeat,
-        gcrepeat
+        gcrepeat,
+        gcfinal
     ])
 
-    
     model.compile(optimizer='adagrad',
-              loss='mean_squared_error',
-              metrics=['accuracy'])
+                  loss='mean_squared_error',
+                  metrics=['accuracy'])
 
-
-    #feed random input features
+    # feed random input features
     import numpy as np
     samples = 13
-    X = np.random.random((samples, number_of_nodes_in_graph, input_feature_dim))
-    Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
+    X = np.random.random(
+        (samples, number_of_nodes_in_graph, input_feature_dim))
+    Y = np.random.randint(
+        2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
     model.fit(X, Y, epochs=1, batch_size=3)
-    
 
     model.summary()
-    
-
-

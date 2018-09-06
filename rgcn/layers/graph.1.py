@@ -38,7 +38,11 @@ class GraphConvolution(Layer):
         
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
-        allIndices = { index for index in [srcAnddst for srcAnddst in [rel for rel in adjecancies]]}
+        allIndices = {}
+        for rel in adjecancies:
+            for (src, dest) in rel:
+                allIndices.add(src)
+                allIndices.add(dest)
         if min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
         self.maxIndexInAdjecencies =  max (allIndices)

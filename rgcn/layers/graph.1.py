@@ -215,7 +215,9 @@ if __name__ == "__main__":
     Y = np.random.randint(
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
+
+    tbcb = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None)
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=500, batch_size=3)
+    model.fit(X, Y, epochs=500, batch_size=3, callbacks=[tbcb])
 
     model.summary()

@@ -134,7 +134,7 @@ class GraphConvolution(Layer):
             # TODO fix what happens when nothing is there.
             theSum = nodePart[0]
             for nodePartPart in nodePart[1:]:
-                theSum.update_add(nodePartPart)
+                K.update_add(theSum, nodePartPart)
             #theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
 

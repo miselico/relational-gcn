@@ -200,17 +200,17 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 3
+    number_of_nodes_in_graph = 100
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     adjecancies = [[(1,2), (0, 0) ]]
     #adjecancies = [[(1,2), (2, 3)]]
-    #adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
+    adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
 
 
-    input_feature_dim = 2
-    internal_feature_dim = 3
-    final_output_feature_dim = 4
+    input_feature_dim = 10
+    internal_feature_dim = 30
+    final_output_feature_dim = 10
 
     gc = GraphConvolution(output_dim=final_output_feature_dim,
                           adjecancies=adjecancies)
@@ -233,7 +233,7 @@ if __name__ == "__main__":
 
     # feed random input features
     import numpy as np
-    samples = 10
+    samples = 100
     X = np.random.random(
         (samples, number_of_nodes_in_graph, input_feature_dim))
     Y = np.random.randint(

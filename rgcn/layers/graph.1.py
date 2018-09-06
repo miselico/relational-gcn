@@ -13,6 +13,8 @@ from keras import activations, initializers
 from keras import regularizers
 from keras.engine import Layer
 
+from keras.layers import Flatten
+
 import keras.backend as K
 
 
@@ -177,6 +179,7 @@ if __name__ == "__main__":
     
     model = Sequential([
         gc,
+        Flatten()
        # Reshape((55,1)),
        # Dense(20)
     ])

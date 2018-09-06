@@ -16,7 +16,6 @@ from keras.engine import Layer
 from keras.layers import Flatten, Reshape
 
 import keras.backend as K
-import keras.backend.tf as tf
 
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,

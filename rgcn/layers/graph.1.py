@@ -11,7 +11,7 @@ from __future__ import print_function
 
 from keras import activations, initializers
 from keras import regularizers
-from keras.engine import Layer
+from keras.engine import Layer, Reshape
 
 from keras.layers import Flatten
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     
     model = Sequential([
         gc,
-        Flatten()
+        Reshape(number_of_nodes_in_graph*output_feature_dim)
        # Reshape((55,1)),
        # Dense(20)
     ])
@@ -190,13 +190,11 @@ if __name__ == "__main__":
               metrics=['accuracy'])
 
 
-    print (model.output_shape)
-
     #feed random input features
     import numpy as np
     samples = 13
     X = np.random.random((samples, number_of_nodes_in_graph, input_feature_dim))
-    Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph, output_feature_dim))
+    Y = np.random.randint(2, size=(samples, number_of_nodes_in_graph * output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
     model.fit(X, Y, epochs=1, batch_size=3)

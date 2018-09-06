@@ -130,7 +130,7 @@ class GraphConvolution(Layer):
             theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
 
-        out = K.stack(out_summed)
+        out = K.stack(out_summed, axis=1)
         print (out)
         K.print_tensor(out, message='OUTPUT')
         return K.transpose(out)

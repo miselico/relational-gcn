@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
 
     number_of_nodes_in_graph = 5
-    adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
+    adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)]]
     input_feature_dim = 11
     output_feature_dim = 7
 

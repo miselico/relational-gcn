@@ -117,8 +117,8 @@ class GraphConvolution(Layer):
         # return result
 
         # list with an item for each node. Each item is a list of tensors which need to be summed to get the output for that node. The final output is the concatenation of these sums.
-        out_parts = [[]] * self.num_nodes
-
+         
+        out_parts = [list() for _ in range(self.num_nodes)]
         # apply weights on links
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
             print ("relation" + str(relationIndex))

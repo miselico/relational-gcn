@@ -131,8 +131,9 @@ class GraphConvolution(Layer):
             out_summed.append(theSum)
 
         out = K.stack(out_summed)
+        print (out)
         K.print_tensor(out, message='OUTPUT')
-        return out.T
+        return K.transpose(out)
 
 
     # Part of old code:    

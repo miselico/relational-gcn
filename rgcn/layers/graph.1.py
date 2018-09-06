@@ -22,7 +22,7 @@ class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
                  init='glorot_uniform', 
                  weights=None, W_regularizer=None, 
-                 b_regularizer=None, bias=False, checkArgs=True **kwargs):
+                 b_regularizer=None, bias=False, checkArgs=True, **kwargs):
         """
         The original implementation had a num_bases=-1 argument. As I am not sure what it is used for, I left it out.
 

@@ -188,7 +188,7 @@ if __name__ == "__main__":
     number_of_nodes_in_graph = 3
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
-    adjecancies = [[(1,2), (2, 0)], [(1, 0)]]
+    adjecancies = [[(1,2)]]
     #adjecancies = [[(1,2), (2, 3)]]
     #adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
 

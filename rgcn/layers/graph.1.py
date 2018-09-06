@@ -131,7 +131,7 @@ class GraphConvolution(Layer):
 
         def sumorsingle(aList):
             if len (aList) > 1:
-                return sum aList
+                return sum(aList)
             else
                 return aList[0]
         out_summed = [sumorsingle(nodePart) for nodePart in out_parts]

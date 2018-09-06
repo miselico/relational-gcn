@@ -22,7 +22,7 @@ class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
                  init='glorot_uniform', 
                  weights=None, W_regularizer=None, 
-                 b_regularizer=None, bias=False,  **kwargs):
+                 b_regularizer=None, bias=False, checkArgs=True **kwargs):
         """
         The original implementation had a num_bases=-1 argument. As I am not sure what it is used for, I left it out.
 
@@ -38,6 +38,12 @@ class GraphConvolution(Layer):
         
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
+        if checkArgs:
+            allIndices = [ index for index in srcAnddst for srcAnddst in rel for rel in adjecancies]
+            if min(allIndices) < 0:
+                raise Exception("Index lower than 0 in adjecancies")
+            # TODO fix some way to check this???
+            # elif max (allIndices) >= 
         self.adjecancies = adjecancies
 
         self.W_regularizer = regularizers.get(W_regularizer)
@@ -174,7 +180,7 @@ if __name__ == "__main__":
     number_of_nodes_in_graph = 5
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)]]
-    adjecancies = [[(1,2), (2, 3)], [(5, 6)]]
+    adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
     #adjecancies = [[(1,2), (2, 3)]]
 
     input_feature_dim = 11

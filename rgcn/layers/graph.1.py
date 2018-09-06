@@ -138,7 +138,6 @@ class GraphConvolution(Layer):
         for nodePart in out_parts:
             # TODO fix what happens when nothing is there.
             theSum = nodePart[0]
-            # TODO re-enable
             for nodePartPart in nodePart[1:]:
                 theSum += nodePartPart
             theSum = K.print_tensor(theSum, message='thesum')
@@ -187,8 +186,8 @@ if __name__ == "__main__":
 
     number_of_nodes_in_graph = 5
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
-    #adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)]]
-    adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
+    adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)]]
+    #adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
     #adjecancies = [[(1,2), (2, 3)]]
 
     input_feature_dim = 11
@@ -198,10 +197,7 @@ if __name__ == "__main__":
 
     
     model = Sequential([
-        gc,
-#        Reshape((number_of_nodes_in_graph*output_feature_dim, ))
-       # Reshape((55,1)),
-       # Dense(20)
+        gc
     ])
 
     

@@ -200,15 +200,15 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 1000
+    number_of_nodes_in_graph = 10000
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     adjecancies = [[(1,2), (0, 0) ]]
     #adjecancies = [[(1,2), (2, 3)]]
-    adjecancies = [  [(a,2), (2, a)] for a in range (number_of_nodes_in_graph) ]
+    adjecancies = [  [(a,2), (2, a)] for a in range (min(number_of_nodes_in_graph, 5000)) ]
 
 
-    input_feature_dim = 10
+    input_feature_dim = 50
     internal_feature_dim = 30
     final_output_feature_dim = 10
 
@@ -242,6 +242,6 @@ if __name__ == "__main__":
 
     tbcb = TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None)
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=20, batch_size=3, callbacks=[tbcb])
+    model.fit(X, Y, epochs=20, batch_size=20, callbacks=[tbcb])
 
     model.summary()

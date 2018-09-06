@@ -121,6 +121,7 @@ class GraphConvolution(Layer):
 
         # apply weights on links
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
+            print ("relation" + str(relationIndex))
             relationWeight = self.W[relationIndex]
             for (source, dest) in relAdj:
                 print ("src, dst" + str((source, dest)))

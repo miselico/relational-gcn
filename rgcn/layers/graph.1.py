@@ -132,7 +132,7 @@ class GraphConvolution(Layer):
         out_summed = []
         for nodePart in out_parts:
             # TODO fix what happens when nothing is there.
-            theSum = K.zeros_like (nodePart[0])
+            theSum = K.variable(K.zeros_like (nodePart[0]))
             for nodePartPart in nodePart:
                 K.update_add(theSum, nodePartPart)
             #theSum = K.print_tensor(theSum, message='thesum')

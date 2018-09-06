@@ -126,7 +126,7 @@ class GraphConvolution(Layer):
             theSum = nodePart[0]
             # TODO re-enable
             for nodePartPart in nodePart[1:]:
-                theSum = theSum + nodePartPart
+                theSum += nodePartPart
             theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
 
@@ -174,6 +174,7 @@ if __name__ == "__main__":
     number_of_nodes_in_graph = 5
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1,2)], [(1, 2)], [(2,3), (3,4)]]
+    #adjecancies = [[(1,2), (2, 3)], [(5, 6)]]
     adjecancies = [[(1,2), (2, 3)]]
 
     input_feature_dim = 11

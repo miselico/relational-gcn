@@ -134,9 +134,12 @@ class GraphConvolution(Layer):
             # TODO fix what happens when nothing is there.
             theSum = nodePart[0]
             for nodePartPart in nodePart[1:]:
-                theSum += nodePartPart
+                theSum.update_add(nodePartPart)
             #theSum = K.print_tensor(theSum, message='thesum')
             out_summed.append(theSum)
+
+
+        #TODO try whether performing the update add operations directly in the adjecancy look results in a more efficient or compact graph..
 
         out = K.stack(out_summed, axis=1)
         #out = K.print_tensor(out, message='OUTPUT')
@@ -175,7 +178,7 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 500
+    number_of_nodes_in_graph = 50
     #adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     #adjecancies = [[(1,2), (2, 3)], [(1, 4)]]
@@ -184,7 +187,7 @@ if __name__ == "__main__":
 
     input_feature_dim = 50
     internal_feature_dim = 20
-    final_output_feature_dim = 20
+    final_output_feature_dim = 1
 
     gc = GraphConvolution(output_dim=internal_feature_dim,
                           adjecancies=adjecancies)
@@ -214,6 +217,6 @@ if __name__ == "__main__":
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=500, batch_size=100)
+    model.fit(X, Y, epochs=500, batch_size=10)
 
     model.summary()

@@ -104,7 +104,7 @@ class GraphConvolution(Layer):
 
     def call(self, inputs, mask=None):
         print("Call called with input ", inputs)
-        inputs = K.print_tensor(inputs)
+        #inputs = K.print_tensor(inputs)
 
         # input_shape = (None - batch size, nodes, input_dim )
         # output shape=(None - batch size, nodes, output_dim)

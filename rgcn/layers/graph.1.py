@@ -17,8 +17,6 @@ from keras.layers import Flatten, Reshape
 
 import keras.backend as K
 
-from keras.utils import plot_model
-
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
                  init='glorot_uniform',
@@ -128,16 +126,16 @@ class GraphConvolution(Layer):
         # TODO apply weights for self loops
         # TODO apply bias
 
-        #out_summed = [sum(nodePart) for nodePart in out_parts]
+        out_summed = [sum(nodePart) for nodePart in out_parts]
 
-        out_summed = []
-        for nodePart in out_parts:
-            # TODO fix what happens when nothing is there.
-            theSum = nodePart[0]
-            for nodePartPart in nodePart:
-                theSum = theSum + nodePartPart
-            #theSum = K.print_tensor(theSum, message='thesum')
-            out_summed.append(theSum)
+        # out_summed = []
+        # for nodePart in out_parts:
+        #     # TODO fix what happens when nothing is there.
+        #     theSum = nodePart[0]
+        #     for nodePartPart in nodePart:
+        #         theSum = theSum + nodePartPart
+        #     #theSum = K.print_tensor(theSum, message='thesum')
+        #     out_summed.append(theSum)
 
 
         #TODO try whether performing the update add operations directly in the adjecancy look results in a more efficient or compact graph..
@@ -219,6 +217,5 @@ if __name__ == "__main__":
 
     # Train the model, iterating on the data in batches of 3 samples
     model.fit(X, Y, epochs=500, batch_size=3)
-    plot_model(model, to_file='model.png')
 
     model.summary()

@@ -179,7 +179,7 @@ if __name__ == "__main__":
     
     model = Sequential([
         gc,
-        Reshape((number_of_nodes_in_graph*output_feature_dim))
+        Reshape((number_of_nodes_in_graph*output_feature_dim, ))
        # Reshape((55,1)),
        # Dense(20)
     ])

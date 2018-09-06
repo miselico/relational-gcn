@@ -132,7 +132,7 @@ class GraphConvolution(Layer):
 
         out = K.stack(out_summed)
         K.print_tensor(out, message='OUTPUT')
-        return out
+        return out.T
 
 
     # Part of old code:    

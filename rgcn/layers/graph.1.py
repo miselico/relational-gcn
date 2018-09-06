@@ -38,7 +38,7 @@ class GraphConvolution(Layer):
         
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
-        allIndices = {}
+        allIndices = set()
         for rel in adjecancies:
             for (src, dest) in rel:
                 allIndices.add(src)

@@ -126,7 +126,9 @@ class GraphConvolution(Layer):
             for (source, dest) in relAdj:
                 print ("src, dst" + str((source, dest)))
                 part = K.dot(inputs[:, source], relationWeight)
-                out_parts[dest].append(part)
+                destinationList = out_parts[dest]
+                destinationList.append(part)
+                print ("OP " + str(out_parts))
         
         print (out_parts)
         # TODO apply weights for self loops

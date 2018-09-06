@@ -194,9 +194,14 @@ if __name__ == "__main__":
 
     gc = GraphConvolution(output_dim = output_feature_dim, adjecancies = adjecancies)
 
+
+    gcrepeat = GraphConvolution(output_dim = output_feature_dim, adjecancies = adjecancies)
     
     model = Sequential([
-        gc
+        gc,
+        gcrepeat,
+        gcrepeat,
+        gcrepeat
     ])
 
     

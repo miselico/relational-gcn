@@ -50,7 +50,7 @@ class GraphConvolution(Layer):
         if min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
         self.maxIndexInAdjecencies = max(allIndices)
-        self.hasNodesWithZeroInDeg = len(allDst) = self.num_nodes
+        self.hasNodesWithZeroInDeg = len(allDst) == self.num_nodes
 
         self.adjecancies = adjecancies
 

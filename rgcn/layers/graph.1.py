@@ -129,6 +129,8 @@ class GraphConvolution(Layer):
         # make a collection of all input sourse slices so they get reused
         inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
+
+        # TODO investigate whether it is faster to slice and append more at the start to then in the end have less, but larger dot products and use backend.sum in a clever way to combine
         # apply weights on links
         for (relationIndex, relAdj) in enumerate(self.adjecancies):
             relationWeight = self.W[relationIndex]
@@ -244,6 +246,7 @@ if __name__ == "__main__":
 
     # feed random input features
     import numpy as np
+    np.random.seed(0)
     samples = 100
     X = np.random.random(
         (samples, number_of_nodes_in_graph, input_feature_dim))

@@ -174,7 +174,7 @@ class GraphConvolution(Layer):
 
         out_self_loop = K.dot(inputs, self.W_self)
 
-        out = K.sum(out_trough_adjecencies, out_self_loop)
+        out = out_trough_adjecencies + out_self_loop
 
         # out_summed = []
         # for nodePart in out_parts:

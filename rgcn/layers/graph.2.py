@@ -40,18 +40,24 @@ class GraphConvolution(Layer):
 
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
-        allIndices = set()
+        
+        self.adjecancies = adjecancies
+
         allDst = set()
+        allSrc = set()
         for rel in adjecancies:
             for (src, dest) in rel:
-                allIndices.add(src)
-                allIndices.add(dest)
+                allSrc.add(src)
                 allDst.add(dest)
+        allIndices = allSrc.union(allDst)
+        
+        self.allSrc = allSrc
+        self.allDst = allDst
+        
         if len(allIndices) > 0 and min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
         self.maxIndexInAdjecencies = -1 if len(allIndices) == 0 else max(allIndices)
 
-        self.adjecancies = adjecancies
 
         self.W_regularizer = regularizers.get(W_regularizer)
         self.b_regularizer = regularizers.get(b_regularizer)
@@ -86,11 +92,7 @@ class GraphConvolution(Layer):
         self.num_nodes = input_shape[1]
         assert self.maxIndexInAdjecencies < self.num_nodes
 
-        allDst = set()
-        for rel in adjecancies:
-            for (src, dest) in rel:
-                allDst.add(dest)        
-        nodesWithNonZeroInDeg = len(allDst)
+        nodesWithNonZeroInDeg = len(self.allDst)
         assert nodesWithNonZeroInDeg <= self.num_nodes
         self.hasNodesWithZeroInDeg = not (nodesWithNonZeroInDeg == self.num_nodes)
 
@@ -138,8 +140,10 @@ class GraphConvolution(Layer):
 
         # make a collection of all input sourse slices so they get reused
         # TODO this list could contain None for nodes which have no outoging edges. Will likely be pruned from the computation graph, though.
+        inSlices = [inputs[:, i] if i in self.allSrc else None for i in range(self.num_nodes)]
         inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
+        print ("Made slices")
 
         # TODO investigate whether it is faster to slice and append more at the start to then in the end have less, but larger dot products and use backend.sum in a clever way to combine
         # apply weights on links

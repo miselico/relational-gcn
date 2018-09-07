@@ -139,7 +139,8 @@ class GraphConvolution(Layer):
         out_parts = [list() for _ in range(self.num_nodes)]
 
         # make a collection of all input sourse slices so they get reused
-        # TODO this list could contain None for nodes which have no outoging edges. Will likely be pruned from the computation graph, though.
+        # this list contains None for nodes which have no outoging edges. 
+        # These would likely be pruned from the computation graph, though.
         inSlices = [inputs[:, i] if i in self.allSrc else None for i in range(self.num_nodes)]
         # inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
@@ -153,6 +154,7 @@ class GraphConvolution(Layer):
                 part = K.dot(inSlices[source], relationWeight)
                 out_parts[dest].append(part)
 
+        print ("Created adjecancy network")
         # TODO apply bias
 
         if self.hasNodesWithZeroInDeg:

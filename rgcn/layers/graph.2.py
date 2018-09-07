@@ -141,7 +141,7 @@ class GraphConvolution(Layer):
         # make a collection of all input sourse slices so they get reused
         # TODO this list could contain None for nodes which have no outoging edges. Will likely be pruned from the computation graph, though.
         inSlices = [inputs[:, i] if i in self.allSrc else None for i in range(self.num_nodes)]
-        inSlices = [inputs[:, i] for i in range(self.num_nodes)]
+        # inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
         print ("Made slices")
 

@@ -196,7 +196,7 @@ class GraphConvolution(Layer):
 
 def _createAdj():
     numberOfRelations = 100
-    numberOfRelationTypes = 10
+    numberOfRelationTypes = 100
 
     adjecancies = []
     for _ in range(numberOfRelationTypes):

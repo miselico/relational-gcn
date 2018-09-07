@@ -165,23 +165,28 @@ class GraphConvolution(Layer):
             zero_part = [K.dot(existingSlice, zeroW)]
             out_parts = [zero_part if len(partList) == 0 else partList for partList in out_parts]
 
+        print ("added zero parts for zero in degree nodes")
+
         def sumorsingle(aList):
             if len(aList) > 1:
                 return sum(aList)
             else:
                 return aList[0]
         out_summed = [sumorsingle(nodePart) for nodePart in out_parts]
-  
+
+        print ("Summed parts together")
 
         out_trough_adjecencies = K.stack(out_summed, axis=1)
         
+        print ("Stacked parts")
         
         # apply weights for self loops
 
         out_self_loop = K.dot(inputs, self.W_self)
+        print ("Computed self loop output")
 
         out = out_trough_adjecencies + out_self_loop
-
+        
         # out_summed = []
         # for nodePart in out_parts:
         #     # TODO fix what happens when nothing is there.

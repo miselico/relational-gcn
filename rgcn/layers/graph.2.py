@@ -253,9 +253,9 @@ if __name__ == "__main__":
     # adjecancies = [[(1,2), (2, 3)]]
     #adjecancies = _createAdj(number_of_nodes_in_graph)
 
-    input_feature_dim = 50
+    input_feature_dim = 2
     internal_feature_dim = 30
-    final_output_feature_dim = 10
+    final_output_feature_dim = 3
 
     gc = GraphConvolution(output_dim=final_output_feature_dim,
                           adjecancies=adjecancies)

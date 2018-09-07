@@ -218,10 +218,10 @@ class GraphConvolution(Layer):
         return dict(list(base_config.items()) + list(config.items()))
 
 
-def _createAdj():
+def _createAdj(number_of_nodes_in_graph):
 #    numberOfRelations = 10000
     numberOfRelations = 100
-    numberOfRelationTypes = 100
+    numberOfRelationTypes = 10
 
     adjecancies = []
     for _ in range(numberOfRelationTypes):
@@ -235,13 +235,13 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 100000
+    number_of_nodes_in_graph = 100
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     # adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     # adjecancies = [[(1, 2), (0, 0)]]
     # adjecancies = [[(1,2), (2, 3)]]
 
-    adjecancies = _createAdj()
+    adjecancies = _createAdj(number_of_nodes_in_graph)
 
     input_feature_dim = 50
     internal_feature_dim = 30

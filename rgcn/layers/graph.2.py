@@ -172,7 +172,7 @@ class GraphConvolution(Layer):
         
         # apply weights for self loops
 
-        out_self_loop = K.dot(inputs, self.W)
+        out_self_loop = K.dot(inputs, self.W_self)
 
         out = K.sum(out_trough_adjecencies, out_self_loop)
 

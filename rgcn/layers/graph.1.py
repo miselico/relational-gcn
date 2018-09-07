@@ -95,9 +95,9 @@ class GraphConvolution(Layer):
                                   regularizer=self.W_regularizer) for (i, _) in enumerate(self.adjecancies)]
 
         self.W_self = self.add_weight((self.input_dim, self.output_dim),
-                                  initializer=self.init,
-                                  name=self.name + '_selfweight',
-                                  regularizer=self.W_regularizer)
+                                      initializer=self.init,
+                                      name=self.name + '_selfweight',
+                                      regularizer=self.W_regularizer)
 
         if self.bias:
             self.b = self.add_weight((self.output_dim,),
@@ -194,46 +194,48 @@ class GraphConvolution(Layer):
         base_config = super(GraphConvolution, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
 
+
 def _createAdj():
     numberOfRelations = 10000
     numberOfRelationTypes = 100
 
     adjecancies = []
     for _ in range(numberOfRelationTypes):
-        rels = [((103079 * relationNumer) % number_of_nodes_in_graph, (101863 * relationNumer) % number_of_nodes_in_graph) for relationNumer in range(numberOfRelations // numberOfRelationTypes)]
+        rels = [((103079 * relationNumer) % number_of_nodes_in_graph, (101863 * relationNumer) %
+                 number_of_nodes_in_graph) for relationNumer in range(numberOfRelations // numberOfRelationTypes)]
         adjecancies.append(rels)
     return adjecancies
+
 
 if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 10000
+    number_of_nodes_in_graph = 100000
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
     # adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
-    adjecancies = [[(1, 2), (0, 0)]]
+    # adjecancies = [[(1, 2), (0, 0)]]
     # adjecancies = [[(1,2), (2, 3)]]
 
     adjecancies = _createAdj()
 
-    input_feature_dim=50
-    internal_feature_dim=30
-    final_output_feature_dim=10
+    input_feature_dim = 50
+    internal_feature_dim = 30
+    final_output_feature_dim = 10
 
-
-    gc=GraphConvolution(output_dim=final_output_feature_dim,
+    gc = GraphConvolution(output_dim=final_output_feature_dim,
                           adjecancies=adjecancies)
 
 #    gcrepeat = GraphConvolution(
 #        output_dim=internal_feature_dim, adjecancies=adjecancies)
 
 #    gcfinal = GraphConvolution(output_dim=final_output_feature_dim, adjecancies=adjecancies)
-    model=Sequential([
+    model = Sequential([
         gc,
- #       gcrepeat,
- #       gcrepeat,
- #       gcrepeat,
-#        gcfinal
+        #       gcrepeat,
+        #       gcrepeat,
+        #       gcrepeat,
+        #        gcfinal
     ])
 
     model.compile(optimizer='adagrad',
@@ -242,24 +244,23 @@ if __name__ == "__main__":
 
     # feed random input features
     import numpy as np
-    samples=100
-    X=np.random.random(
+    samples = 100
+    X = np.random.random(
         (samples, number_of_nodes_in_graph, input_feature_dim))
-    Y=np.random.randint(
+    Y = np.random.randint(
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     print("Number of nodes %d" % number_of_nodes_in_graph)
     print("Number of Relation types %d" % len(adjecancies))
-    print("Number of Relations %d" %  sum ([len(rels) for rels in adjecancies ]) )
+    print("Number of Relations %d" % sum([len(rels) for rels in adjecancies]))
     print("Number of input features %d" % input_feature_dim)
     print("Number of output features %d" % final_output_feature_dim)
     print("Number of samples %d" % samples)
 
-
-    tbcb=TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False,
-                     write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None)
+    tbcb = TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False,
+                       write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None)
     print ("Saving model to tensorboard")
-    
+
     # Train the model, iterating on the data in batches of 3 samples
     model.fit(X, Y, epochs=20, batch_size=20, callbacks=[tbcb])
 

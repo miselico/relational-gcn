@@ -249,11 +249,11 @@ if __name__ == "__main__":
         2, size=(samples, number_of_nodes_in_graph, final_output_feature_dim))
 
     print("Number of nodes %d" % number_of_nodes_in_graph)
-    print("Number of Relation types %d", len(adjecancies))
-    print("Number of Relations %d",  sum ([len(rels) for rels in adjecancies ]) )
-    print("Number of input features %d", input_feature_dim)
-    print("Number of output features %d", final_output_feature_dim)
-    print("Number of samples %d", samples)
+    print("Number of Relation types %d" % len(adjecancies))
+    print("Number of Relations %d" %  sum ([len(rels) for rels in adjecancies ]) )
+    print("Number of input features %d" % input_feature_dim)
+    print("Number of output features %d" % final_output_feature_dim)
+    print("Number of samples %d" % samples)
 
 
     tbcb=TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False,

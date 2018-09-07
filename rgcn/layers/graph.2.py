@@ -194,6 +194,7 @@ class GraphConvolution(Layer):
         # TODO try whether performing the update add operations directly in the adjecancy look results in a more efficient or compact graph..
 
         # out = K.print_tensor(out, message='OUTPUT')
+        print ("return from call()")
         return out
 
     # Part of old code:

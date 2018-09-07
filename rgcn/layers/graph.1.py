@@ -195,7 +195,7 @@ class GraphConvolution(Layer):
         return dict(list(base_config.items()) + list(config.items()))
 
 def _createAdj():
-    numberOfRelations = 100
+    numberOfRelations = 10000
     numberOfRelationTypes = 100
 
     adjecancies = []

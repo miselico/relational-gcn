@@ -47,9 +47,9 @@ class GraphConvolution(Layer):
                 allIndices.add(src)
                 allIndices.add(dest)
                 allDst.add(dest)
-        if min(allIndices) < 0:
+        if len(allIndices) > 0 and min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
-        self.maxIndexInAdjecencies = max(allIndices)
+        self.maxIndexInAdjecencies = -1 if len(allIndices) == 0 else max(allIndices)
 
         self.adjecancies = adjecancies
 
@@ -92,7 +92,7 @@ class GraphConvolution(Layer):
                 allDst.add(dest)        
         nodesWithNonZeroInDeg = len(allDst)
         assert nodesWithNonZeroInDeg <= self.num_nodes
-        self.hasNodesWithZeroInDeg = nodesWithNonZeroInDeg == self.num_nodes
+        self.hasNodesWithZeroInDeg = not (nodesWithNonZeroInDeg == self.num_nodes)
 
         self.input_dim = input_shape[2]
 

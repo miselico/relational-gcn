@@ -137,6 +137,7 @@ class GraphConvolution(Layer):
         out_parts = [list() for _ in range(self.num_nodes)]
 
         # make a collection of all input sourse slices so they get reused
+        # TODO this list could contain None for nodes which have no outoging edges. Will likely be pruned from the computation graph, though.
         inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
 
@@ -155,7 +156,7 @@ class GraphConvolution(Layer):
             # TODO there is likely a better way to do achieve this, but can't figure it out
             zeroW = K.zeros((self.input_dim, self.output_dim))
             existingSlice = next(slice for slice in inSlices if slice is not None)
-            zero_part = [K.dot(inSlices[0], relationWeight)]
+            zero_part = [K.dot(existingSlice, zeroW)]
             out_parts = [zero_part if len(partList) == 0 else partList for partList in out_parts]
 
         def sumorsingle(aList):

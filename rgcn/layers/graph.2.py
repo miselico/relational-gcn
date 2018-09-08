@@ -186,7 +186,7 @@ class GraphConvolution(Layer):
         print ("Computed self loop output")
 
         out = out_trough_adjecencies + out_self_loop
-        
+
         # out_summed = []
         # for nodePart in out_parts:
         #     # TODO fix what happens when nothing is there.
@@ -248,7 +248,7 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 100000
+    number_of_nodes_in_graph = 1000
     
     adjecancies = []
 

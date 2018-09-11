@@ -40,7 +40,7 @@ class GraphConvolution(Layer):
 
         self.init = initializers.get(init)
         self.output_dim = output_dim  # number of features per node
-        
+
         self.adjecancies = adjecancies
 
         allDst = set()
@@ -50,14 +50,14 @@ class GraphConvolution(Layer):
                 allSrc.add(src)
                 allDst.add(dest)
         allIndices = allSrc.union(allDst)
-        
+
         self.allSrc = allSrc
         self.allDst = allDst
-        
+
         if len(allIndices) > 0 and min(allIndices) < 0:
             raise Exception("Index lower than 0 in adjecancies")
-        self.maxIndexInAdjecencies = -1 if len(allIndices) == 0 else max(allIndices)
-
+        self.maxIndexInAdjecencies = - \
+            1 if len(allIndices) == 0 else max(allIndices)
 
         self.W_regularizer = regularizers.get(W_regularizer)
         self.b_regularizer = regularizers.get(b_regularizer)
@@ -94,7 +94,8 @@ class GraphConvolution(Layer):
 
         nodesWithNonZeroInDeg = len(self.allDst)
         assert nodesWithNonZeroInDeg <= self.num_nodes
-        self.hasNodesWithZeroInDeg = not (nodesWithNonZeroInDeg == self.num_nodes)
+        self.hasNodesWithZeroInDeg = not (
+            nodesWithNonZeroInDeg == self.num_nodes)
 
         self.input_dim = input_shape[2]
 
@@ -110,7 +111,7 @@ class GraphConvolution(Layer):
                                       initializer=self.init,
                                       name=self.name + '_selfweight',
                                       regularizer=self.W_regularizer)
-        
+
         if self.bias:
             self.b = self.add_weight((self.output_dim,),
                                      initializer='zero',
@@ -139,9 +140,10 @@ class GraphConvolution(Layer):
         out_parts = [list() for _ in range(self.num_nodes)]
 
         # make a collection of all input sourse slices so they get reused
-        # this list contains None for nodes which have no outoging edges. 
+        # this list contains None for nodes which have no outoging edges.
         # These would likely be pruned from the computation graph, though.
-        inSlices = [inputs[:, i] if i in self.allSrc else None for i in range(self.num_nodes)]
+        inSlices = [
+            inputs[:, i] if i in self.allSrc else None for i in range(self.num_nodes)]
         # inSlices = [inputs[:, i] for i in range(self.num_nodes)]
 
         print ("Made slices")
@@ -161,9 +163,11 @@ class GraphConvolution(Layer):
             # there are nodes with no in edge
             # TODO there is likely a better way to do achieve this, but can't figure it out
             zeroW = K.zeros((self.input_dim, self.output_dim))
-            existingSlice = next(slice for slice in inSlices if slice is not None)
+            existingSlice = next(
+                slice for slice in inSlices if slice is not None)
             zero_part = [K.dot(existingSlice, zeroW)]
-            out_parts = [zero_part if len(partList) == 0 else partList for partList in out_parts]
+            out_parts = [zero_part if len(
+                partList) == 0 else partList for partList in out_parts]
 
         print ("added zero parts for zero in degree nodes")
 
@@ -176,10 +180,17 @@ class GraphConvolution(Layer):
 
         print ("Summed parts together")
 
-        out_trough_adjecencies = K.stack(out_summed, axis=1)
-        
+        print ("Computing stack manually....")
+        #out_trough_adjecencies = K.stack(out_summed, axis=1)
+        outshape = K.shape(inputs)
+        res = K.zeros(outshape)
+        # assign each of the results to res[:,i] = res_i
+
+        for i in range(self.num_nodes):
+            res[:, i] = out_summed[i]
+
         print ("Stacked parts")
-        
+
         # apply weights for self loops
 
         out_self_loop = K.dot(inputs, self.W_self)
@@ -232,7 +243,7 @@ class GraphConvolution(Layer):
 
 
 def _createAdj(number_of_nodes_in_graph):
-#    numberOfRelations = 10000
+    #    numberOfRelations = 10000
     numberOfRelations = 100
     numberOfRelationTypes = 10
 
@@ -249,7 +260,7 @@ if __name__ == "__main__":
     from keras.layers import Reshape, Dense
 
     number_of_nodes_in_graph = 1000
-    
+
     adjecancies = []
 
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]

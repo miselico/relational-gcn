@@ -180,14 +180,13 @@ class GraphConvolution(Layer):
 
         print ("Summed parts together")
 
-        print ("Computing stack manually....")
-        #out_trough_adjecencies = K.stack(out_summed, axis=1)
-        outshape = K.shape(inputs)
-        res = K.zeros(outshape)
-        # assign each of the results to res[:,i] = res_i
+        out_trough_adjecencies = K.stack(out_summed, axis=1)
+        # outshape = K.shape(inputs)
+        # res = K.zeros(outshape)
+        # # assign each of the results to res[:,i] = res_i
 
-        for i in range(self.num_nodes):
-            res[:, i] = out_summed[i]
+        # for i in range(self.num_nodes):
+        #     res[:, i] = out_summed[i]
 
         print ("Stacked parts")
 
@@ -259,7 +258,7 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 10000
+    number_of_nodes_in_graph = 100
 
     adjecancies = []
 

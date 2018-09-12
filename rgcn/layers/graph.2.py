@@ -261,12 +261,12 @@ class GraphConvolution(Layer):
 
         dims = [dims[i] + dims[i+1] for i in range(0, len(dims), 2)]
 
-        reshaped = [K.reshape(t,  (-1, dims[i]), self.output_dim)
+        reshaped = [K.reshape(t,  (-1, dims[i], self.output_dim))
                     for (i, t) in enumerate(stackedPairs)]
 
         return self._stackInPairsRes(reshaped, dims)
 
-    def _stackInPairsUnEven(self, out_summed, num_elements, dims):
+    def _stackInPairsUnEven(self, out_summed, dims):
         raise Exception()
     #     out_summed = K.print_tensor(out_summed, "enter_sipUE")
     #     spare = out_summed[-1]

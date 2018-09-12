@@ -183,7 +183,7 @@ class GraphConvolution(Layer):
         #out_trough_adjecencies = K.stack(out_summed, axis=1)
 
         #TODO trying stack in binary fashion
-        out_trough_adjecencies = GraphConvolution._mergeInPairs(out_summed, self.num_nodes)
+        out_trough_adjecencies = GraphConvolution._stackInPairs(out_summed, self.num_nodes)
 
 
         #the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
@@ -235,25 +235,25 @@ class GraphConvolution(Layer):
         # return output
     
     @staticmethod
-    def _mergeInPairs(out_summed, num_elements):
+    def _stackInPairs(out_summed, num_elements):
         if len(out_summed) == 1:
             return out_summed[0]
         if num_elements % 2 == 0:
-            return GraphConvolution._mergeInPairsEven(out_summed, num_elements)
+            return GraphConvolution._stackInPairsEven(out_summed, num_elements)
         else:
-            return GraphConvolution._mergeInPairsUnEven(out_summed, num_elements)
+            return GraphConvolution._stackInPairsUnEven(out_summed, num_elements)
 
     @staticmethod
-    def _mergeInPairsEven(out_summed, num_elements):
+    def _stackInPairsEven(out_summed, num_elements):
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements, 2)]
-        return GraphConvolution._mergeInPairs(pairsStacked, num_elements//2)
+        return GraphConvolution._stackInPairs(pairsStacked, num_elements//2)
 
     @staticmethod
-    def _mergeInPairsUnEven(out_summed, num_elements):
+    def _stackInPairsUnEven(out_summed, num_elements):
         spare = out_summed[-1]
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
         pairsStacked.append(spare)
-        return GraphConvolution._mergeInPairs(pairsStacked, num_elements//2 + 1)
+        return GraphConvolution._stackInPairs(pairsStacked, num_elements//2 + 1)
 
 
     def get_config(self):
@@ -286,18 +286,17 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 80000
+    number_of_nodes_in_graph = 4
 
     adjecancies = []
-
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
-    adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
+    # adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     # adjecancies = [[(1, 2), (0, 0)]]
     # adjecancies = [[(1,2), (2, 3)]]
     #adjecancies = _createAdj(number_of_nodes_in_graph)
 
     input_feature_dim = 2
-    internal_feature_dim = 30
+    internal_feature_dim = 5
     final_output_feature_dim = 3
 
     gc = GraphConvolution(output_dim=final_output_feature_dim,

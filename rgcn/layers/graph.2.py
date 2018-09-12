@@ -240,7 +240,7 @@ class GraphConvolution(Layer):
 
     def _stackInPairsRec(self, out_summed, dims):
         print ("sinPair %d" % len(dims))
-        print ([K.int_shape(op) for op in out_summed])
+       # print ([K.int_shape(op) for op in out_summed])
         assert len(dims) == len(out_summed)
         if len(dims) == 1:
             return out_summed[0]
@@ -252,7 +252,7 @@ class GraphConvolution(Layer):
     def _stackInPairsEven(self, out_summed, dims):
         assert len(dims) % 2 == 0
         print ("sinPairE %d" % len(dims))
-        print ([K.int_shape(op) for op in out_summed])
+        #print ([K.int_shape(op) for op in out_summed])
 
         stackedPairs = [K.stack([out_summed[i], out_summed[i+1]], axis=1)
                         for i in range(0, len(dims), 2)]

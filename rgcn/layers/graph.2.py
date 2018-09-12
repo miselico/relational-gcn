@@ -236,7 +236,7 @@ class GraphConvolution(Layer):
     
     @staticmethod
     def _stackInPairs(out_summed, num_elements):
-        out_summed = K.print_tensor(out_summed, "enter_sip")
+        out_summed = [K.print_tensor(op, "enter_sip") for op in out_summed]
         if len(out_summed) == 1:
             return out_summed[0]
         if num_elements % 2 == 0:

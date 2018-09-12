@@ -236,8 +236,6 @@ class GraphConvolution(Layer):
     def _stackInPairs(self, out_summed, num_elements):
         dims = [1]*num_elements
         result = self._stackInPairsRec(out_summed, dims)
-        dims = result[1]
-        assert len(dims) == 1 and dims[0] == num_elements
         return result[0]
 
     def _stackInPairsRec(self, out_summed, dims):

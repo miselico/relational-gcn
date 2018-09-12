@@ -234,31 +234,29 @@ class GraphConvolution(Layer):
         #     output += self.b
         # return output
     
-    @staticmethod
-    def _stackInPairs(out_summed, num_elements):
+    def _stackInPairs(self, out_summed, num_elements):
         print ("sinPair %d", num_elements)
         print ([K.int_shape(op) for op in out_summed])
         if len(out_summed) == 1:
             return out_summed[0]
         if num_elements % 2 == 0:
-            return GraphConvolution._stackInPairsEven(out_summed, num_elements)
+            return self._stackInPairsEven(out_summed, num_elements)
         else:
-            return GraphConvolution._stackInPairsUnEven(out_summed, num_elements)
+            return self._stackInPairsUnEven(out_summed, num_elements)
 
-    @staticmethod
-    def _stackInPairsEven(out_summed, num_elements):
+    def _stackInPairsEven(self, out_summed, num_elements):
         print ("sinPaireven %d", num_elements)
         print ([K.int_shape(op) for op in out_summed])
-        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements, 2)]
-        return GraphConvolution._stackInPairs(pairsStacked, num_elements//2)
+        newShape = (-1, -1, self.output_dim)
+        pairsStacked = [K.reshape(K.stack([out_summed[i], out_summed[i+1]], axis=1), newShape) for i in range(0, num_elements, 2)]
+        return self._stackInPairs(pairsStacked, num_elements//2)
 
-    @staticmethod
-    def _stackInPairsUnEven(out_summed, num_elements):
+    def _stackInPairsUnEven(self, out_summed, num_elements):
         out_summed = K.print_tensor(out_summed, "enter_sipUE")
         spare = out_summed[-1]
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
         pairsStacked.append(spare)
-        return GraphConvolution._stackInPairs(pairsStacked, num_elements//2 + 1)
+        return self._stackInPairs(pairsStacked, num_elements//2 + 1)
 
 
     def get_config(self):

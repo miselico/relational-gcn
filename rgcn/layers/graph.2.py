@@ -180,7 +180,13 @@ class GraphConvolution(Layer):
 
         print ("Summed parts together")
 
-        out_trough_adjecencies = K.stack(out_summed, axis=1)
+        #out_trough_adjecencies = K.stack(out_summed, axis=1)
+
+        #TODO trying stack in binary fashion
+        out_trough_adjecencies = GraphConvolution.mergeInPairs(out_summed, self.num_nodes)
+
+
+        #the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
         # outshape = K.shape(inputs)
         # res = K.zeros(outshape)
         # # assign each of the results to res[:,i] = res_i
@@ -227,6 +233,28 @@ class GraphConvolution(Layer):
         # if self.bias:
         #     output += self.b
         # return output
+    
+    @staticmethod
+    def _mergeInPairs(out_summed, num_elements):
+        if len(out_summed) == 1:
+            return out_summed[0]
+        if num_elements % 2 == 0:
+            return GraphConvolution._mergeInPairsEven(out_summed, num_elements)
+        else:
+            return GraphConvolution._mergeInPairsUnEven(out_summed, num_elements)
+
+    @staticmethod
+    def _mergeInPairsEven(out_summed, num_elements):
+        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]]) for i in range(0, num_elements, 2)]
+        return GraphConvolution.mergeInPairs(pairsStacked, num_elements//2)
+
+    @staticmethod
+    def _mergeInPairsUnEven(out_summed, num_elements):
+        spare = out_summed[-1]
+        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]]) for i in range(0, num_elements - 1, 2)]
+        pairsStacked.append(spare)
+        return GraphConvolution.mergeInPairs(pairsStacked, num_elements//2 + 1)
+
 
     def get_config(self):
         config = {'output_dim': self.output_dim,

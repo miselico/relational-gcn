@@ -286,7 +286,7 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 100
+    number_of_nodes_in_graph = 80000
 
     adjecancies = []
 
@@ -340,6 +340,6 @@ if __name__ == "__main__":
     print ("Saving model to tensorboard")
 
     # Train the model, iterating on the data in batches of 3 samples
-    model.fit(X, Y, epochs=20, batch_size=20, callbacks=[tbcb])
+    model.fit(X, Y, epochs=20, batch_size=100, callbacks=[tbcb])
 
     model.summary()

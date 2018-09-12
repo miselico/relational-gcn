@@ -236,6 +236,7 @@ class GraphConvolution(Layer):
     
     @staticmethod
     def _stackInPairs(out_summed, num_elements):
+        out_summed = K.print_tensor(out_summed, "enter_sip")
         if len(out_summed) == 1:
             return out_summed[0]
         if num_elements % 2 == 0:
@@ -245,11 +246,14 @@ class GraphConvolution(Layer):
 
     @staticmethod
     def _stackInPairsEven(out_summed, num_elements):
+        out_summed = K.print_tensor(out_summed, "enter_sipE")
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements, 2)]
+        pairsStacked = [K.print_tensor(o, "part") for o in pairsStacked ]
         return GraphConvolution._stackInPairs(pairsStacked, num_elements//2)
 
     @staticmethod
     def _stackInPairsUnEven(out_summed, num_elements):
+        out_summed = K.print_tensor(out_summed, "enter_sipUE")
         spare = out_summed[-1]
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
         pairsStacked.append(spare)

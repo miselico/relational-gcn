@@ -264,7 +264,7 @@ class GraphConvolution(Layer):
         reshaped = [K.reshape(t,  (-1, dims[i], self.output_dim))
                     for (i, t) in enumerate(stackedPairs)]
 
-        return self._stackInPairsRes(reshaped, dims)
+        return self._stackInPairsRec(reshaped, dims)
 
     def _stackInPairsUnEven(self, out_summed, dims):
         raise Exception()

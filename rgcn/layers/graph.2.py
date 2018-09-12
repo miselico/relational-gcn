@@ -183,7 +183,7 @@ class GraphConvolution(Layer):
         #out_trough_adjecencies = K.stack(out_summed, axis=1)
 
         #TODO trying stack in binary fashion
-        out_trough_adjecencies = GraphConvolution.mergeInPairs(out_summed, self.num_nodes)
+        out_trough_adjecencies = GraphConvolution._mergeInPairs(out_summed, self.num_nodes)
 
 
         #the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors

@@ -182,11 +182,10 @@ class GraphConvolution(Layer):
 
         #out_trough_adjecencies = K.stack(out_summed, axis=1)
 
-        #TODO trying stack in binary fashion
+        # TODO trying stack in binary fashion
         out_trough_adjecencies = self._stackInPairs(out_summed, self.num_nodes)
 
-
-        #the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
+        # the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
         # outshape = K.shape(inputs)
         # res = K.zeros(outshape)
         # # assign each of the results to res[:,i] = res_i
@@ -233,31 +232,47 @@ class GraphConvolution(Layer):
         # if self.bias:
         #     output += self.b
         # return output
-    
+
     def _stackInPairs(self, out_summed, num_elements):
-        print ("sinPair %d", num_elements)
+        dims = [1]*num_elements
+        result = self._stackInPairsRec(out_summed, dims)
+        dims = result[1]
+        assert len(dims) == 1 and dims[0] == num_elements
+        return result[0]
+
+    def _stackInPairsRec(self, out_summed, dims):
+        print ("sinPair %d" % len(dims))
         print ([K.int_shape(op) for op in out_summed])
-        if len(out_summed) == 1:
+        assert len(dims) == len(out_summed)
+        if len(dims) == 1:
             return out_summed[0]
-        if num_elements % 2 == 0:
-            return self._stackInPairsEven(out_summed, num_elements)
+        if len(dims) % 2 == 0:
+            return self._stackInPairsEven(out_summed, dims)
         else:
-            return self._stackInPairsUnEven(out_summed, num_elements)
+            return self._stackInPairsUnEven(out_summed, dims)
 
-    def _stackInPairsEven(self, out_summed, num_elements):
-        print ("sinPaireven %d", num_elements)
+    def _stackInPairsEven(self, out_summed, dims):
+        assert len(dims) % 2 == 0
+        print ("sinPairE %d" % len(dims))
         print ([K.int_shape(op) for op in out_summed])
-        newShape = (-1, -1, self.output_dim)
-        pairsStacked = [K.reshape(K.stack([out_summed[i], out_summed[i+1]], axis=1), newShape) for i in range(0, num_elements, 2)]
-        return self._stackInPairs(pairsStacked, num_elements//2)
 
-    def _stackInPairsUnEven(self, out_summed, num_elements):
-        out_summed = K.print_tensor(out_summed, "enter_sipUE")
-        spare = out_summed[-1]
-        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
-        pairsStacked.append(spare)
-        return self._stackInPairs(pairsStacked, num_elements//2 + 1)
+        stackedPairs = [K.stack([out_summed[i], out_summed[i+1]], axis=1)
+                        for i in range(0, len(dims), 2)]
 
+        dims = [dims[i] + dims[i+1] for i in range(0, len(dims), 2)]
+
+        reshaped = [K.reshape(t,  (-1, dims[i]), self.output_dim)
+                    for (i, t) in enumerate(stackedPairs)]
+
+        return self._stackInPairsRes(reshaped, dims)
+
+    def _stackInPairsUnEven(self, out_summed, num_elements, dims):
+        raise Exception()
+    #     out_summed = K.print_tensor(out_summed, "enter_sipUE")
+    #     spare = out_summed[-1]
+    #     pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
+    #     pairsStacked.append(spare)
+    #     return self._stackInPairs(pairsStacked, num_elements//2 + 1)
 
     def get_config(self):
         config = {'output_dim': self.output_dim,

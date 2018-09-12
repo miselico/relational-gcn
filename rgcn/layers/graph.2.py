@@ -245,13 +245,13 @@ class GraphConvolution(Layer):
 
     @staticmethod
     def _mergeInPairsEven(out_summed, num_elements):
-        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]]) for i in range(0, num_elements, 2)]
+        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements, 2)]
         return GraphConvolution._mergeInPairs(pairsStacked, num_elements//2)
 
     @staticmethod
     def _mergeInPairsUnEven(out_summed, num_elements):
         spare = out_summed[-1]
-        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]]) for i in range(0, num_elements - 1, 2)]
+        pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
         pairsStacked.append(spare)
         return GraphConvolution._mergeInPairs(pairsStacked, num_elements//2 + 1)
 

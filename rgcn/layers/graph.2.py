@@ -236,7 +236,8 @@ class GraphConvolution(Layer):
     
     @staticmethod
     def _stackInPairs(out_summed, num_elements):
-        out_summed = [K.print_tensor(op, "enter_sip") for op in out_summed]
+        print ("sinPair %d", num_elements)
+        print ([K.int_shape(op) for op in out_summed])
         if len(out_summed) == 1:
             return out_summed[0]
         if num_elements % 2 == 0:
@@ -246,9 +247,9 @@ class GraphConvolution(Layer):
 
     @staticmethod
     def _stackInPairsEven(out_summed, num_elements):
-        out_summed = K.print_tensor(out_summed, "enter_sipE")
+        print ("sinPaireven %d", num_elements)
+        print ([K.int_shape(op) for op in out_summed])
         pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements, 2)]
-        pairsStacked = [K.print_tensor(o, "part") for o in pairsStacked ]
         return GraphConvolution._stackInPairs(pairsStacked, num_elements//2)
 
     @staticmethod

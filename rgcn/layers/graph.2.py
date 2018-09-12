@@ -302,7 +302,7 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 4
+    number_of_nodes_in_graph = 65536
 
     adjecancies = []
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]

@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     #number_of_nodes_in_graph = 65536
     #number_of_nodes_in_graph = 1048576
-    number_of_nodes_in_graph = 3
+    number_of_nodes_in_graph = 10000
 
     #adjecancies = []
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]

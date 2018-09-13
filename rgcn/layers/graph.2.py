@@ -269,16 +269,19 @@ class GraphConvolution(Layer):
         assert len(dims) % 2 == 1
         print ("sinPairUE %d" % len(dims))
 
-        savedT = out_summed[-1]
         savedD = dims[-1]
+        savedT = out_summed[-1]
+        #making sure the dimension is compatible
+        savedT = K.reshape(savedT, (-1, savedD, self.output_dim))
+
         restT = out_summed [:-1]
         restD = dims[:-1]
         restStacked = self._stackInPairsEven(restT, restD)
         restDim = sum(restD)
+
         new_out_summed = [restStacked, savedT]
         new_dims = [restDim, savedD]
-        #making sure the dimension is compatible
-        savedT = K.reshape(savedT, (-1, savedD, self.output_dim))
+
         return self._stackInPairsEven(new_out_summed, new_dims)
 
     def get_config(self):

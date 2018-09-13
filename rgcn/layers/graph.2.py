@@ -277,6 +277,8 @@ class GraphConvolution(Layer):
         restDim = sum(restD)
         new_out_summed = [restStacked, savedT]
         new_dims = [restDim, savedD]
+        #making sure the dimension is compatible
+        savedT = K.reshape(savedT, (-1, restD, self.output_dim))
         return self._stackInPairsEven(new_out_summed, new_dims)
 
     def get_config(self):

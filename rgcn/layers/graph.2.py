@@ -18,7 +18,7 @@ from keras.callbacks import TensorBoard
 from keras.layers import Flatten, Reshape
 
 import keras.backend as K
-
+from itertools import accumulate
 
 class GraphConvolution(Layer):
     def __init__(self, output_dim, adjecancies,
@@ -181,21 +181,7 @@ class GraphConvolution(Layer):
 
         print ("Summed parts together")
 
-        #out_trough_adjecencies = K.stack(out_summed, axis=1)
-        
-        out_summed_reshaped = [K.reshape( part, ( -1 ,1 , self.output_dim )) for part in out_summed]
-        out_trough_adjecencies = K.concatenate(out_summed_reshaped, axis=1)
-
-        # TODO trying stack in binary fashion
-        #out_trough_adjecencies = self._stackInPairs(out_summed, self.num_nodes)
-
-        # the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
-        # outshape = K.shape(inputs)
-        # res = K.zeros(outshape)
-        # # assign each of the results to res[:,i] = res_i
-
-        # for i in range(self.num_nodes):
-        #     res[:, i] = out_summed[i]
+        out_trough_adjecencies = self.stackOutTroughAjecency(out_summed)
 
         print ("Stacked parts")
 
@@ -237,6 +223,75 @@ class GraphConvolution(Layer):
         #     output += self.b
         # return output
 
+    def stackOutTroughAjecency(self, out_summed):
+        # What this function tries to achieve:
+        #out_trough_adjecencies = K.stack(out_summed, axis=1)
+
+        #experiment with concatente: too slow
+        #out_summed_reshaped = [K.reshape(part, (-1, 1, self.output_dim)) for part in out_summed]
+        #out_trough_adjecencies = K.concatenate(out_summed_reshaped, axis=1)
+
+        # stack in binary fashion -> works only for 2**n pieces, but reasonbly fast
+        #out_trough_adjecencies = self._stackInPairs(out_summed, self.num_nodes)
+
+        # the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
+        # outshape = K.shape(inputs)
+        # res = K.zeros(outshape)
+        # # assign each of the results to res[:,i] = res_i
+        # for i in range(self.num_nodes):
+        #     res[:, i] = out_summed[i]
+
+        # TODO idea: do first paiwaise stacking of 2^n ranges, then concatenate pieces
+        partitionIndices = GraphConvolution._partitionDims(self.num_nodes)
+        partitions = [ out_summed[start:end] for (start, end) in partitionIndices]
+        stackedPartitions = [self._stackInPairsPow2( partition,  len(partition)) for partition in partitions]
+        stacked = K.concatenate(stackedPartitions, axis=1)
+        return stacked
+
+
+    def _stackInPairsPow2(self, out_summed, num_elements):
+        assert num_elements != 0 and ((num_elements & (num_elements - 1)) == 0) # num_elements is a power of 2
+        dims = [1]*num_elements
+        result = self._stackInPairsPow2Rec(out_summed, dims)
+        return result[0]
+
+    #TODO this method can get rid of the dims.
+    def _stackInPairsPow2Rec(self, out_summed, dims):
+        assert len(dims) % 2 == 0
+        print ("sinPairPow2 %d" % len(dims))
+        #print ([K.int_shape(op) for op in out_summed])
+
+        stackedPairs = [K.stack([out_summed[i], out_summed[i+1]], axis=1)
+                        for i in range(0, len(dims), 2)]
+
+        dims = [dims[i] + dims[i+1] for i in range(0, len(dims), 2)]
+
+        reshaped = [K.reshape(t,  (-1, dims[i], self.output_dim))
+                    for (i, t) in enumerate(stackedPairs)]
+
+        if len(dims) == 1:
+            return reshaped[0]
+        else:
+            return self._stackInPairsPow2Rec(reshaped, dims)
+
+
+    @staticmethod
+    def _partitionDims(num_elements):
+        '''returns 2**n sized partitions of the elements'''
+        partitions = []
+        num_elements_rest = num_elements
+        while num_elements_rest != 0:
+            partitions.append(num_elements_rest%2)
+            num_elements_rest = num_elements_rest // 2
+        counters = [2**index for (index, val) in enumerate(partitions) if val != 0]
+        counters.reverse()
+        assert num_elements == sum(counters)
+        partition_ends = list(accumulate(counters))
+        starts = [0]
+        starts.extend(partition_ends[:-1])
+        partitions = [(start, nextStart) for (start, nextStart) in  zip(starts,  partition_ends)]
+        return partitions
+
     def _stackInPairs(self, out_summed, num_elements):
         dims = [1]*num_elements
         result = self._stackInPairsRec(out_summed, dims)
@@ -274,10 +329,10 @@ class GraphConvolution(Layer):
 
         savedD = dims[-1]
         savedT = out_summed[-1]
-        #making sure the dimension is compatible
+        # making sure the dimension is compatible
         savedT = K.reshape(savedT, (-1, savedD, self.output_dim))
 
-        restT = out_summed [:-1]
+        restT = out_summed[:-1]
         restD = dims[:-1]
         restStacked = self._stackInPairsEven(restT, restD)
         restDim = sum(restD)

@@ -318,8 +318,8 @@ if __name__ == "__main__":
     #adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     # adjecancies = [[(1, 2), (0, 0)]]
     # adjecancies = [[(1,2), (2, 3)]]
-    #adjecancies = [[(0, 1)]]
-    adjecancies = _createAdj(number_of_nodes_in_graph)
+    adjecancies = [[(0, 1)]]
+    #adjecancies = _createAdj(number_of_nodes_in_graph)
 
     input_feature_dim = 2
     internal_feature_dim = 5

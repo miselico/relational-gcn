@@ -166,6 +166,7 @@ class GraphConvolution(Layer):
             existingSlice = next(
                 slice for slice in inSlices if slice is not None)
             zero_part = [K.dot(existingSlice, zeroW)]
+            # TODO there might be some way to save here: many will be zero, hence adding larger blocks of zeroes might speed things up.
             out_parts = [zero_part if len(
                 partList) == 0 else partList for partList in out_parts]
 
@@ -302,14 +303,15 @@ if __name__ == "__main__":
     from keras.models import Sequential
     from keras.layers import Reshape, Dense
 
-    number_of_nodes_in_graph = 65536
+    #number_of_nodes_in_graph = 65536
+    number_of_nodes_in_graph = 131072
 
     adjecancies = []
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]
-    # adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
+    adjecancies = [[(1, 2)], [(1, 2)], [(2, 3), (3, 4)], [(2, 3), (3, 4)]] * 50
     # adjecancies = [[(1, 2), (0, 0)]]
     # adjecancies = [[(1,2), (2, 3)]]
-    adjecancies = [[(0, 1)]]
+    #adjecancies = [[(0, 1)]]
     #adjecancies = _createAdj(number_of_nodes_in_graph)
 
     input_feature_dim = 2

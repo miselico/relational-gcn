@@ -266,12 +266,18 @@ class GraphConvolution(Layer):
         return self._stackInPairsRec(reshaped, dims)
 
     def _stackInPairsUnEven(self, out_summed, dims):
-        raise Exception()
-    #     out_summed = K.print_tensor(out_summed, "enter_sipUE")
-    #     spare = out_summed[-1]
-    #     pairsStacked = [K.stack([out_summed[i], out_summed[i+1]], axis=1) for i in range(0, num_elements - 1, 2)]
-    #     pairsStacked.append(spare)
-    #     return self._stackInPairs(pairsStacked, num_elements//2 + 1)
+        assert len(dims) % 2 == 1
+        print ("sinPairUE %d" % len(dims))
+
+        savedT = out_summed[-1]
+        savedD = dims[-1]
+        restT = out_summed [:-1]
+        restD = dims[:-1]
+        restStacked = self._stackInPairsEven(restT, restD)
+        restDim = sum(restD)
+        new_out_summed = [restStacked, savedT]
+        new_dims = [restDim, savedD]
+        return self._stackInPairsEven(new_out_summed, new_dims)
 
     def get_config(self):
         config = {'output_dim': self.output_dim,
@@ -304,7 +310,8 @@ if __name__ == "__main__":
     from keras.layers import Reshape, Dense
 
     #number_of_nodes_in_graph = 65536
-    number_of_nodes_in_graph = 1048576
+    #number_of_nodes_in_graph = 1048576
+    number_of_nodes_in_graph = 5
 
     #adjecancies = []
     # adjecancies = [[(1,2)], [], [(2,3), (3,4)]]

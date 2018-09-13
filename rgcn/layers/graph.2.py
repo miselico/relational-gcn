@@ -182,9 +182,12 @@ class GraphConvolution(Layer):
         print ("Summed parts together")
 
         #out_trough_adjecencies = K.stack(out_summed, axis=1)
+        
+        out_summed_reshaped = [K.reshape( part, ( -1 ,1 , self.output_dim )) for part in out_summed]
+        out_trough_adjecencies = K.concatenate(out_summed_reshaped, axis=1)
 
         # TODO trying stack in binary fashion
-        out_trough_adjecencies = self._stackInPairs(out_summed, self.num_nodes)
+        #out_trough_adjecencies = self._stackInPairs(out_summed, self.num_nodes)
 
         # the following did not work. the idea was to do the stacking manually. Unfortunately keras does not allow assignment to tensors
         # outshape = K.shape(inputs)

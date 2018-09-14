@@ -254,7 +254,7 @@ class GraphConvolution(Layer):
         assert num_elements != 0 and ((num_elements & (num_elements - 1)) == 0) # num_elements is a power of 2
         dims = [1]*num_elements
         result = self._stackInPairsPow2Rec(out_summed, dims)
-        return result[0]
+        return result
 
     #TODO this method can get rid of the dims.
     def _stackInPairsPow2Rec(self, out_summed, dims):

@@ -245,6 +245,7 @@ class GraphConvolution(Layer):
         partitionIndices = GraphConvolution._partitionDims(self.num_nodes)
         partitions = [ out_summed[start:end] for (start, end) in partitionIndices]
         stackedPartitions = [self._stackInPairsPow2( partition,  len(partition)) for partition in partitions]
+        print ([K.int_shape(op) for op in stackedPartitions])
         stacked = K.concatenate(stackedPartitions, axis=1)
         return stacked
 
@@ -259,8 +260,7 @@ class GraphConvolution(Layer):
     def _stackInPairsPow2Rec(self, out_summed, dims):
         assert len(dims) % 2 == 0
         print ("sinPairPow2 %d" % len(dims))
-        print ([K.int_shape(op) for op in out_summed])
-
+        
         stackedPairs = [K.stack([out_summed[i], out_summed[i+1]], axis=1)
                         for i in range(0, len(dims), 2)]
 
@@ -270,7 +270,6 @@ class GraphConvolution(Layer):
                     for (i, t) in enumerate(stackedPairs)]
 
         if len(dims) == 1:
-            print ("FINAL", [K.int_shape(op) for op in reshaped])
             return reshaped[0]
         else:
             return self._stackInPairsPow2Rec(reshaped, dims)

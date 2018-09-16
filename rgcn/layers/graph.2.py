@@ -260,8 +260,8 @@ class GraphConvolution(Layer):
 
     #TODO this method can get rid of the dims.
     def _stackInPairsPow2Rec(self, out_summed, dims):
-        assert len(dims) % 2 == 0
         print ("sinPairPow2 %d" % len(dims))
+        assert len(dims) % 2 == 0
         
         stackedPairs = [K.stack([out_summed[i], out_summed[i+1]], axis=1)
                         for i in range(0, len(dims), 2)]
@@ -377,7 +377,7 @@ if __name__ == "__main__":
     from keras.layers import Reshape, Dense
 
     #number_of_nodes_in_graph = 131071
-    number_of_nodes_in_graph = 2
+    number_of_nodes_in_graph = 3
     #number_of_nodes_in_graph = 1048576
     #number_of_nodes_in_graph = 131072
 
